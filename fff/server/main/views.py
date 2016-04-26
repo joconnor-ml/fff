@@ -1,24 +1,10 @@
-# fff/server/main/views.py
-
-
-#################
-#### imports ####
-#################
+from fff.server.models import Player, Performance, db
 
 from flask import render_template, Blueprint
 from bokeh.embed import components
 from bokeh.plotting import figure
 
-################
-#### config ####
-################
-
 main_blueprint = Blueprint('main', __name__,)
-
-
-################
-#### routes ####
-################
 
 
 @main_blueprint.route('/')
@@ -33,10 +19,17 @@ def about():
 
 @main_blueprint.route("/graph/")
 def graph():
+    # oj = db.session.query(Player).filter_by(name='oj').one()
+    perfs = db.session.query(Performance).all()
+    print(perfs)
     plot = figure()
-    plot.circle([1, 2, 3, 4, 5], [6, 7, 2, 4, 5],
+    x = []
+    y = []
+    for perf in perfs:
+        x.append(perf.goals_scored)
+        y.append(perf.points)
+    plot.circle(x, y,
                 size=15, line_color="navy",
                 fill_color="orange", fill_alpha=0.5)
     script, div = components(plot)
-    return render_template('graph.html', script=script, div=div)
-    
+    return render_template('main/graph.html', script=script, div=div)

@@ -1,10 +1,3 @@
-# fff/server/__init__.py
-
-
-#################
-#### imports ####
-#################
-
 import os
 
 from flask import Flask, render_template
@@ -14,10 +7,6 @@ from flask.ext.debugtoolbar import DebugToolbarExtension
 from flask_bootstrap import Bootstrap
 from flask.ext.sqlalchemy import SQLAlchemy
 
-
-################
-#### config ####
-################
 
 app = Flask(
     __name__,
@@ -46,30 +35,8 @@ bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 
 
-###################
-### blueprints ####
-###################
-
-from fff.server.user.views import user_blueprint
 from fff.server.main.views import main_blueprint
-app.register_blueprint(user_blueprint)
 app.register_blueprint(main_blueprint)
-
-
-###################
-### flask-login ####
-###################
-
-from fff.server.models import User
-
-login_manager.login_view = "user.login"
-login_manager.login_message_category = 'danger'
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.filter(User.id == int(user_id)).first()
-
 
 ########################
 #### error handlers ####
